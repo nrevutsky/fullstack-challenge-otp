@@ -1,0 +1,16 @@
+.spinner {
+  position: absolute !important;
+  text-align: center;
+  line-height: 100vh !important;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  z-index: 1000 !important;
+}
+
+.welcome {
+  position: fixed !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

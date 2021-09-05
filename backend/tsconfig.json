@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "noImplicitReturns": true,
+    "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
+    "module": "commonjs",
+    "strict": true,
+    "sourceMap": true,
+    "target": "es2018",
+    "outDir": ".build",
+    "isolatedModules": true,
+    "lib": ["es2018"],
+    "rootDir": "./",
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", ".serverless"]
+}

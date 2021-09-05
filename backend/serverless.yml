@@ -1,0 +1,83 @@
+service: fullstack-challenge
+
+frameworkVersion: '2'
+
+
+provider:
+  name: aws
+  region: eu-central-1
+  runtime: nodejs12.x
+  lambdaHashingVersion: '20201221'
+  memorySize: 128
+  timeout: 20
+  versionFunctions: false
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - ses:SendEmail
+        - dynamodb:*
+      Resource: '*'
+  environment:
+    JWT_SECRET: ${env:JWT_SECRET}
+
+useDotenv: true
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+  - serverless-dynamodb-local
+
+custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+
+functions:
+  logIn:
+    handler: src/lambdas/logIn/index.handler
+    events:
+      - http:
+          path: /log-in
+          method: post
+          cors: true
+
+  checkOTP:
+    handler: src/lambdas/checkOTP/index.handler
+    events:
+      - http:
+          path: /check-otp
+          method: post
+          cors: true
+
+  getUser:
+    handler: src/lambdas/getUser/index.handler
+    events:
+      - http:
+          path: /get-user
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+
+  authorizer:
+    handler: src/lambdas/authorizer/index.handler
+
+resources:
+  Resources:
+    userTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: user
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
